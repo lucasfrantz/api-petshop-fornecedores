@@ -1,6 +1,7 @@
 const TabelaFornecedor = require('./TabelaFornecedor')
 const CampoInvalido = require('../../erros/CampoInvalido')
 const DadosNaoFornecidos = require('../../erros/DadosNaoFornecidos')
+const TabelaProduto = require('./produtos/TabelaProduto')
 
 class Fornecedor {
     constructor({ id, empresa, email, categoria, dataCriacao, dataAtualizacao, versao }) {
@@ -69,6 +70,10 @@ class Fornecedor {
                 throw new CampoInvalido(campo)
             }
         })
+    }
+
+    async pegarProdutosSemEstoque() {
+        return TabelaProduto.necessitaEstoque(this.id)
     }
 }
 

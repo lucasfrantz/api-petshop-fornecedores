@@ -28,6 +28,16 @@ app.use((requisicao, resposta, proximo) => {
     proximo()
 })
 
+app.use((requisicao, resposta, proximo) => {
+    resposta.set('X-Powered-By', 'Gatito petshop')
+    proximo()
+})
+
+app.use((requisicao, resposta, proximo) => {
+    resposta.set('Access-Control-Allow-Origin', '*')
+    proximo()
+})
+
 app.use('/api/fornecedores', roteador)
 
 app.use((erro, requisicao, resposta, proximo) => {
