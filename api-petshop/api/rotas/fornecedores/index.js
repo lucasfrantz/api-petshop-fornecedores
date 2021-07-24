@@ -15,7 +15,7 @@ roteador.options('/', (requisicao, resposta) => {
 roteador.get('/', async (requisicao, resposta) => {
     const resultados = await TabelaFornecedor.listar()
     resposta.status(200)
-    const serializador = new SerializadorFornecedor(resposta.getHeader('Content-Type'))
+    const serializador = new SerializadorFornecedor(resposta.getHeader('Content-Type'), ['empresa'])
     resposta.send(serializador.serializar(resultados))
 })
 
@@ -26,7 +26,7 @@ roteador.post('/', async (requisicao, resposta, proximo) => {
         const fornecedor = new Fornecedor(dadosRecebidos)
         await fornecedor.criar()
         resposta.status(201)
-        const serializador = new SerializadorFornecedor(resposta.getHeader('Content-Type'))
+        const serializador = new SerializadorFornecedor(resposta.getHeader('Content-Type'), ['empresa'])
         resposta.send(serializador.serializar(fornecedor))
     } catch (erro) {
         proximo(erro)
@@ -47,7 +47,7 @@ roteador.get('/:idFornecedor', async (requisicao, resposta, proximo) => {
         const fornecedor = new Fornecedor({ id })
         await fornecedor.carregar()
         resposta.status(200)
-        const serializador = new SerializadorFornecedor(resposta.getHeader('Content-Type'), ['email', 'dataCriacao', 'dataAtualizacao', 'versao'])
+        const serializador = new SerializadorFornecedor(resposta.getHeader('Content-Type'), ['empresa', 'email', 'dataCriacao', 'dataAtualizacao', 'versao'])
         resposta.send(serializador.serializar(fornecedor))
     } catch (erro) {
         proximo(erro)
@@ -97,7 +97,7 @@ roteador.post('/:idFornecedor/calcular-reposicao-de-estoque', async (requisicao,
         })
         await fornecedor.carregar()
         const produtosSemEstoque = await TabelaProduto.listar(fornecedor.id, { estoque: 0 })
-        const serializador = new SerializadorProduto(resposta.getHeader('Content-Type'))
+        const serializador = new SerializadorProduto(resposta.getHeader('Content-Type'), ['empresa'])
         resposta.status(200)
         resposta.send(
             {
